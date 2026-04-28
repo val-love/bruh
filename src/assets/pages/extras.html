@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Extras - Dominum</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<style>
+  :root {
+    --bg:#0b0a16;--accent:#7a5cff;--blue:#00bfff;--text:#e6e6ff;
+    --surface:rgba(255,255,255,0.05);--border:rgba(255,255,255,0.1);--card-bg:rgba(255,255,255,0.03);
+  }
+  body {
+    margin:0;padding:40px;background:var(--bg);color:var(--text);
+    font-family:'Orbitron',sans-serif;display:flex;flex-direction:column;
+    align-items:center;justify-content:flex-start;height:100vh;overflow-y:auto;
+    position:relative;z-index:1;
+  }
+  h1 {font-size:2.2em;margin-bottom:30px;text-transform:uppercase;color:var(--accent);}
+  
+  .extras-buttons {display:flex;gap:20px;flex-wrap:wrap;justify-content:center;z-index:2;}
+  
+  .extras-btn {
+    background:var(--surface);border:2px solid var(--border);color:var(--text);
+    padding:15px 30px;border-radius:10px;cursor:pointer;font-size:1em;
+    text-transform:uppercase;letter-spacing:1px;transition:all .3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position:relative;z-index:3;
+  }
+  
+  .extras-btn:hover {
+    background:var(--accent);
+    color:#fff;
+    transform:translateY(-4px);
+    box-shadow: 0 8px 20px rgba(122, 92, 255, 0.4);
+    border-color: var(--accent);
+  }
+
+  .modal {
+    display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;
+    background:rgba(10,10,20,.8);backdrop-filter:blur(8px);justify-content:center;align-items:center;
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  
+  .modal.active{display:flex; opacity: 1;}
+  
+  .modal-content {
+    background:var(--card-bg);border:2px solid var(--border);border-radius:15px;
+    padding:25px;width:80%;max-width:700px;max-height:80%;overflow-y:auto;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);animation:slideUp .4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index:1001;position:relative;
+  }
+  
+  .modal-header {
+    display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;
+    border-bottom: 1px solid var(--border); padding-bottom: 10px;
+  }
+  
+  .modal-header h2{color:var(--accent);font-size:1.5em; margin:0;}
+  
+  .close-btn{cursor:pointer;font-size:1.5em;color:var(--text);transition:color .3s ease, transform 0.2s ease;}
+  .close-btn:hover{color:var(--accent); transform: scale(1.2);}
+  
+  .card {
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:15px;display:flex;align-items:flex-start;gap:15px;margin-bottom:15px;
+    transition:transform .3s ease,border-color .3s ease, box-shadow .3s ease;cursor:pointer;
+  }
+  
+  .card:hover{
+    border-color:var(--accent);
+    transform:translateY(-3px) scale(1.02);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+  
+  .card img{width:60px;height:60px;border-radius:50%;object-fit:cover; border: 2px solid transparent; transition: border-color 0.3s ease;}
+  .card:hover img{border-color: var(--accent);}
+  
+  .card-content{flex:1;}
+  .card h3{margin:0;font-size:1.1em;color:var(--accent); transition: color 0.3s ease;}
+  .card p.role{font-size:.9em;color:var(--blue);margin-bottom:5px;}
+  .card p.desc{font-size:.85em;color:var(--text);opacity:.9; line-height: 1.4;}
+  
+  .link-btns{display:flex;gap:15px;margin-top:20px;justify-content:center;}
+  .link-btn{
+    background:var(--surface);border:1px solid var(--accent);color:#fff;padding:10px 20px;border-radius:8px;
+    cursor:pointer;font-family:'Orbitron',sans-serif;text-transform:uppercase;transition:all .3s ease;
+  }
+  .link-btn:hover{background:var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(122, 92, 255, 0.3);}
+  
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+  
+  #particles-js {
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    z-index:-1;
+    pointer-events:none;
+  }
+  
+  #vortex-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  #vortex-links .card {
+    text-align: center;
+    cursor: pointer;
+    justify-content: center;
+  }
+</style>
+</head>
+<body>
+<div id="particles-js"></div>
+<h1>Extras</h1>
+<div class="extras-buttons">
+  <button class="extras-btn" onclick="openModal('credits-modal')"><i class="fa-solid fa-star"></i> Credits</button>
+  <button class="extras-btn" onclick="openModal('partners-modal')"><i class="fa-solid fa-handshake"></i> Partners</button>
+  <button class="extras-btn" onclick="openModal('vortex-modal')"><i class="fa-solid fa-comments"></i> Vortex Chat</button>
+  <button class="extras-btn" onclick="openEaglerLauncher()"><i class="fa-solid fa-rocket"></i> Eagler Launcher</button>
+  <button class="extras-btn" onclick="alert('This page is kind of useless, so once I make more ports I will open this back up :3')"><i class="fa-solid fa-gamepad"></i> Game Ports</button>
+  <button class="extras-btn" onclick="openDataGen()"><i class="fa-solid fa-code"></i> Data URL Gen</button>
+</div>
+
+<div class="modal" id="credits-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Credits</h2>
+      <span class="close-btn" onclick="closeModal('credits-modal')">&times;</span>
+    </div>
+    <div id="credits-container">
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="partners-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Partners</h2>
+      <span class="close-btn" onclick="closeModal('partners-modal')">&times;</span>
+    </div>
+    <div id="partners-container">
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="profile-modal">
+  <div class="modal-content" style="max-width: 500px;">
+    <div class="modal-header">
+      <h2 id="profile-name"></h2>
+      <span class="close-btn" onclick="closeModal('profile-modal')">&times;</span>
+    </div>
+    <div style="display:flex;gap:20px;align-items:center;">
+      <img id="profile-img" src="" alt="Profile" style="width:90px;height:90px;border-radius:50%;object-fit:cover; border: 2px solid var(--accent);">
+      <div>
+        <p id="profile-role" style="color:var(--blue);margin:0 0 10px 0; font-weight: bold;"></p>
+        <p id="profile-desc" style="color:var(--text);opacity:.9;font-size:.95em; line-height: 1.5;"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="partner-link-modal">
+  <div class="modal-content" style="max-width: 400px; text-align: center;">
+    <div class="modal-header" style="justify-content: center; position: relative;">
+      <h2 id="partner-name"></h2>
+      <span class="close-btn" onclick="closeModal('partner-link-modal')" style="position: absolute; right: 0;">&times;</span>
+    </div>
+    <p style="margin-top:15px; color: var(--blue);">Where would you like to go?</p>
+    <div class="link-btns">
+      <button id="discord-btn" class="link-btn"><i class="fa-brands fa-discord"></i> Discord</button>
+      <button id="website-btn" class="link-btn"><i class="fa-solid fa-globe"></i> Website</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="vortex-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Vortex Chat</h2>
+      <span class="close-btn" onclick="closeModal('vortex-modal')">&times;</span>
+    </div>
+    <p style="text-align:center;margin-bottom:15px; color: var(--blue);">Select a proxy link to open:</p>
+    <div id="vortex-links">
+      <div class="card" onclick="openEmbed('https://vortexos.net/embed/dominum')"><h3>Link 1</h3></div>
+      <div class="card" onclick="openEmbed('https://vtx.chat/embed/dominum')"><h3>Link 2</h3></div>
+      <div class="card" onclick="openEmbed('https://vortexos.global.ssl.fastly.net/embed/dominum')"><h3>Link 3</h3></div>
+      <div class="card" onclick="openEmbed('https://vtx.bloxcraft-ubg.workers.dev/embed/dominum')"><h3>Link 4</h3></div>
+      <div class="card" onclick="openEmbed('https://vortexisgoated.xn--72cg7bdd3bro6b3ab9c8btw4x.com/embed/dominum')"><h3>Link 5</h3></div>
+      <div class="card" onclick="openEmbed('https://apush.lotossutra.at/embed/dominum')"><h3>Link 6</h3></div>
+      <div class="card" onclick="openEmbed('https://dpsisa.chickenkiller.com/embed/dominum')"><h3>Link 7</h3></div>
+      <div class="card" onclick="openEmbed('https://mail.linkylike.com/embed/dominum')"><h3>Link 8</h3></div>
+      <div class="card" onclick="openEmbed('https://autoconfig.cus-mail-ph27-eby74.doyoumail.co/embed/dominum')"><h3>Link 9</h3></div>
+      <div class="card" onclick="openEmbed('https://vortexos.net.cdn.cloudflare.net/embed/dominum')"><h3>Link 10</h3></div>
+      <div class="card" onclick="openEmbed('https://vortex-chat.ctx.cl/embed/dominum')"><h3>Link 11</h3></div>
+      <div class="card" onclick="openEmbed('https://dashboard.clienturl.net/embed/dominum')"><h3>Link 12</h3></div>
+      <div class="card" onclick="openEmbed('https://dashboard.fluxus.org/embed/dominum')"><h3>Link 13</h3></div>
+      <div class="card" onclick="openEmbed('https://blight.404.mn/embed/dominum')"><h3>Link 14</h3></div>
+      <div class="card" onclick="openEmbed('https://auth.mcwrite.net/embed/dominum')"><h3>Link 15</h3></div>
+    </div>
+  </div>
+</div>
+
+<div id="embed-container" style="display:none; position:fixed; top:0;left:0; width:100%;height:100%; z-index:2000; background-color:#000;">
+  <button onclick="closeEmbed()" style="
+    position:absolute; top:15px;right:20px; z-index:2001;
+    background:var(--accent); color:#fff; border:none; border-radius:8px;
+    padding:10px 20px; font-family:'Orbitron',sans-serif; text-transform:uppercase;
+    cursor:pointer; transition:background .3s, transform 0.2s;
+  " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Close</button>
+  <iframe id="embed-frame" src="" style="width:100%;height:100%;border:none;"></iframe>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script>
+  
+  const siteCredits = [
+    { name: "Dominus_Elitus", role: "Owner of Dominum Network", desc: "Fish :D", img: "../images/transparent-dominum.png" },
+    { name: "Bog", role: "Games And Game Ports", desc: "Credits to this guy for the game ports (Ultrakill, Tattletail, etc.) Also credits to NPA (National Porting Assosiation), GN-Math, and Truffled.lol.", img: "../images/users/bog.gif" },
+    { name: "ZXS", role: "Dev Management", desc: "Basically made the entire site layout and made the games, apps, and proxy. Also a proxy developer, and owner of ZXS Games.", img: "../images/users/zxs.png" }
+  ];
+
+  const sitePartners = [
+    { name: "ProGS2Z", owner: "Swatt12 :/", desc: "A volcano full of games.", img: "../images/partners/progs2z.png", discord: "https://discord.gg/CwtVutWYRj", website: "https://sites.google.com/view/prohomework2z" },
+    { name: "Pixel-X26", owner: "Pixel", desc: "The unblocked website for school.", img: "../images/partners/pixel-x26.png", discord: "https://discord.gg/W59jgrbC", website: "https://sites.google.com/view/pi-26/%E2%84%8D" },
+    { name: "Games Unite", owner: "Mathias", desc: "Uniting Others Alike.", img: "../images/partners/games-unite.png", discord: "https://discord.gg/5tYbGTYxQV", website: "https://sites.google.com/view/djnfjewio-jwmekmeg-get5rju-rww" },
+    { name: "Blood", owner: "Maybekbj", desc: "Be apart of something amazing.", img: "../images/partners/blood.png", discord: "https://discord.gg/Cu2wxw8Qef", website: "https://sites.google.com/gwd50.org/kingstonhomework/home" },
+    { name: "ZXS Games", owner: "ZXS", desc: "UBG like never seen before.", img: "../images/partners/zxs-games.png", discord: "https://discord.com/invite/mPJcQKy2s2", website: "https://zxsgames.vip/" },
+    { name: "Galaxy Hub", owner: "Alex", desc: "A great unblocked site.", img: "../images/partners/gal-hub.png", discord: "https://discord.gg/D5RZRny7pD", website: "https://hubgal.my.canva.site/" },
+    { name: "Botulinum", owner: "Amelia_GamingZone", desc: "A cool site with a nice asthetic.", img: "../images/partners/botulinum.png", discord: "https://discord.com/invite/XccT9zax", website: "https://sites.google.com/view/botulinum-/home" },
+    { name: "Mojmail Ink.", owner: "ProGS2Z", desc: "A Company made by ProGS2Z.", img: "../images/partners/mojmail.png", discord: "none", website: "https://sites.google.com/view/mojmail-ink/home" },
+    { name: "Game Blitz", owner: "GameBlitz", desc: "A site with tons of visits.", img: "../images/partners/game-blitz.png", discord: "https://linktr.ee/GameBlitz", website: "https://sites.google.com/view/www-clever-com" },
+    { name: "M3T4L", owner: "Dominus_Elitus", desc: "Endless options for unblocking.", img: "../images/partners/m3t4l.png", discord: "https://discord.gg/nTVx9BMcYb", website: "https://sites.google.com/view/acgf-studentssmarts4you435d-2/home" },
+    { name: "ChillZone", owner: "DyingPoets", desc: "The best school entertainment site.", img: "../images/partners/chillzone.png", discord: "https://discord.gg/DHx4VKwwkt", website: "https://sites.google.com/view/eduviewing" },
+    { name: "Unlocked Joy", owner: "Unlocked Joy", desc: "Unrestricted Game Site.", img: "../images/partners/unlocked-joy.png", discord: "https://discord.gg/pyehknEkXj", website: "https://sites.google.com/view/unlockedjoy-site/home" },
+    { name: "チル・カーブ (Chill Kirb Central)", owner: "Øverłoaded", desc: "Everything you need on a chill site.", img: "../images/partners/chill-kirb.gif", discord: "https://discord.gg/FuTy7Pej", website: "https://sites.google.com/view/fus3-bomb/home" },
+    { name: "GSites Entertainment (soon)", owner: "Owner Unknown", desc: "Endless options for unblocking.", img: "../images/partners/soon.png", discord: "none", website: "none" },
+    { name: "Coffees Arcade", owner: "Coffee", desc: "Your site for games, proxies, and more.", img: "../images/partners/coffees-arcade.png", discord: "https://discord.gg/7D6zGsGmUF", website: "https://sites.google.com/view/coffe-i-eat" },
+    { name: "Voidcore", owner: "Owner Unknown", desc: "The ultimate hangout spot.", img: "../images/partners/voidcore.png", discord: "https://discord.gg/6ebkpjWDzz", website: "https://sites.google.com/view/v0idcore/home" },
+    { name: "Pulsar Proxy", owner: "Kilonøx (Yeti1o1)", desc: "Great ui with games and apps.", img: "../images/partners/pulsar.png", discord: "https://discord.gg/9KKk4DNBPE", website: "https://pulsar.global.ssl.fastly.net/" },
+    { name: "Copyright Dragon", owner: "Owner Unknown", desc: "Im not sure its copyrighted yet.", img: "../images/partners/c-dragon.png", discord: "none", website: "https://sites.google.com/view/copyright-dragon-" },
+    { name: "Sunset Learning", owner: "Sunset Learning", desc: "Sunset Learning is a site with tons of games, books, apps, movies, and more.", img: "../images/partners/sunset-learning.png", discord: "https://discord.gg/kStXJcQ8np", website: "https://sites.google.com/view/sunsetlearninn/" },
+    { name: "Unblocked Makers", owner: "Jacorn And Maddox", desc: "The best place to find tons of unblocked websites, including the one you`re on now.", img: "../images/partners/unblocked-makers.png", discord: "https://discord.gg/uvuNAzrhWc", website: "https://ubghub.org/" },
+    { name: "DuckMath", owner: "JaCorn And Maddox", desc: "Offering 200+ games, a compeditive leaderboard, custom profiles, and more.", img: "../images/partners/duckmath.gif", discord: "https://discord.gg/EVNRkBfqrR", website: "https://duckmath.org" },
+    { name: "Orbit (Shut down)", owner: "OJ (Astr0Cat)", desc: "Does this site even have a description anymore??", img: "../images/partners/orbit.png", discord: "https://discord.gg/UnG9qrfW", website: "https://orbit.nekoweb.org/" },
+    { name: "Vortex", owner: "Idk the owner but the Co-Owner is Gmanchew99", desc: "Chat with your friends at school.", img: "../images/partners/vortex.png", discord: "https://discord.gg/vtex", website: "https://vortexos.net/" },
+    { name: "CookingWithJay (Ultra)", owner: "Jay", desc: "Cooking up games for your entertainment.", img: "../images/partners/cwj-ultra.png", discord: "none", website: "https://sites.google.com/view/cookingwitjay-ultra/" },
+    { name: "Bloxcraft", owner: "Bloxcraft Studios", desc: "An unblocked games site you can play every day.", img: "../images/partners/bloxcraft.png", discord: "https://discord.gg/sqPFYEsz8F", website: "https://bloxcraft-ubg.pages.dev/" },
+    { name: "UNB History", owner: "TVM (emp56)", desc: "Every day is a new chance to improve and build more immersive digital experiences.", img: "../images/partners/unb-history.png", discord: "none", website: "https://sites.google.com/stu.palmbeachschools.org/learn-play-adapt" },
+    { name: "Axiom Proxy", owner: "Arson (imdonewithdc)", desc: "An amazing webos proxy with a sleek feeling.", img: "../images/partners/axiom.png", discord: "https://discord.gg/A2AZb8SgCD", website: "https://cars.axiomsontop.shop/" },
+    { name: "1Key", owner: "Builder267|595k", desc: "pls use 1key", img: "../images/partners/1key.gif", discord: "https://discord.gg/jrtpTfZu", website: "https://1key.lol/" }
+  ];
+
+  function renderCredits() {
+    const container = document.getElementById('credits-container');
+    container.innerHTML = '';
+    siteCredits.forEach(credit => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => openProfile(credit.name, credit.role, credit.desc, credit.img);
+      card.innerHTML = `
+        <img src="${credit.img}" alt="${credit.name}">
+        <div class="card-content">
+          <h3>${credit.name}</h3>
+          <p class="role">${credit.role}</p>
+          <p class="desc">${credit.desc}</p>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function renderPartners() {
+    const container = document.getElementById('partners-container');
+    container.innerHTML = '';
+    sitePartners.forEach(partner => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => handlePartnerClick(partner.name, partner.owner, partner.desc, partner.img, partner.discord, partner.website);
+      card.innerHTML = `
+        <img src="${partner.img}" alt="${partner.name}">
+        <div class="card-content">
+          <h3>${partner.name}</h3>
+          <p class="role">Owned by: ${partner.owner}</p>
+          <p class="desc">${partner.desc}</p>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  renderCredits();
+  renderPartners();
+
+  let currentPartner = {};
+  
+  function openModal(id) { 
+    document.getElementById(id).classList.add('active'); 
+  }
+  
+  function closeModal(id) { 
+    document.getElementById(id).classList.remove('active'); 
+  }
+  
+  document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { 
+    if(e.target === m) closeModal(m.id); 
+  }));
+  
+  function openProfile(name, role, desc, img) {
+    document.getElementById('profile-name').innerText = name;
+    document.getElementById('profile-role').innerText = role;
+    document.getElementById('profile-desc').innerText = desc;
+    document.getElementById('profile-img').src = img;
+    openModal('profile-modal');
+  }
+  
+  function handlePartnerClick(name, owner, desc, img, discord, website) {
+    if ((!discord || discord === 'none') && website && website !== 'none') {
+      window.open(website, '_blank');
+      return;
+    }
+    if ((!website || website === 'none') && discord && discord !== 'none') {
+      window.open(discord, '_blank');
+      return;
+    }
+    if ((!website || website === 'none') && (!discord || discord === 'none')) {
+      alert("No links provided for this partner yet!");
+      return;
+    }
+    
+    currentPartner = { name, discord, website };
+    document.getElementById('partner-name').innerText = name;
+    
+    const dBtn = document.getElementById('discord-btn');
+    const wBtn = document.getElementById('website-btn');
+    
+    dBtn.style.display = (discord && discord !== 'none') ? 'inline-block' : 'none';
+    wBtn.style.display = (website && website !== 'none') ? 'inline-block' : 'none';
+    
+    openModal('partner-link-modal');
+  }
+  
+  document.getElementById('discord-btn').addEventListener('click', () => {
+    closeModal('partner-link-modal');
+    if(currentPartner.discord && currentPartner.discord !== 'none') window.open(currentPartner.discord, '_blank');
+  });
+  
+  document.getElementById('website-btn').addEventListener('click', () => {
+    closeModal('partner-link-modal');
+    if(currentPartner.website && currentPartner.website !== 'none') window.open(currentPartner.website, '_blank');
+  });
+
+  function openEmbed(url){
+    closeModal('vortex-modal');
+    const embedContainer = document.getElementById('embed-container');
+    const iframe = document.getElementById('embed-frame');
+    iframe.src = url;
+    embedContainer.style.display = 'block';
+  }
+  
+  function closeEmbed(){
+    const embedContainer = document.getElementById('embed-container');
+    const iframe = document.getElementById('embed-frame');
+    iframe.src = '';
+    embedContainer.style.display = 'none';
+  }
+
+  (function() {
+    const particlesEnabled = localStorage.getItem('dominum-particles') !== 'false';
+    const particlesContainer = document.getElementById('particles-js');
+    if (particlesEnabled) {
+      particlesContainer.style.display = 'block';
+      particlesJS("particles-js", {
+        "particles": {
+          "number": { "value": 60 },
+          "color": { "value": ["#7a5cff", "#00bfff"] },
+          "shape": { "type": "circle" },
+          "opacity": { "value": 0.5 },
+          "size": { "value": 2 },
+          "line_linked": { "enable": true, "distance": 130, "color": "#7a5cff", "opacity": 0.2, "width": 1 },
+          "move": { "enable": true, "speed": 1.2, "direction": "none", "out_mode": "out" }
+        },
+        "interactivity": {
+          "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": false } },
+          "modes": { "repulse": { "distance": 100 } }
+        },
+        "retina_detect": true
+      });
+    } else {
+      particlesContainer.style.display = 'none';
+    }
+  })();
+
+  const root = document.documentElement;
+  const themes = {
+    default:{"--bg":"#0b0a16","--accent":"#7a5cff","--blue":"#00bfff","--text":"#e6e6ff","--surface":"rgba(255,255,255,0.05)","--border":"rgba(255,255,255,0.1)","--card-bg":"rgba(255,255,255,0.03)"},
+    cyber:{"--bg":"#050c1b","--accent":"#39ff14","--blue":"#00ffff","--text":"#e0ffe0","--surface":"rgba(0,255,0,0.05)","--border":"rgba(0,255,0,0.1)","--card-bg":"rgba(0,255,0,0.03)"},
+    sunset:{"--bg":"#1a0b0b","--accent":"#ff6f61","--blue":"#ffa500","--text":"#fff0e6","--surface":"rgba(255,110,100,0.05)","--border":"rgba(255,110,100,0.1)","--card-bg":"rgba(255,110,100,0.03)"},
+    neon:{"--bg":"#0f0020","--accent":"#ff00ff","--blue":"#00ffff","--text":"#ffffff","--surface":"rgba(255,0,255,0.05)","--border":"rgba(255,0,255,0.1)","--card-bg":"rgba(255,0,255,0.03)"},
+    darkred:{"--bg":"#1b0000","--accent":"#ff0000","--blue":"#cc0000","--text":"#ffe6e6","--surface":"rgba(255,0,0,0.05)","--border":"rgba(255,0,0,0.1)","--card-bg":"rgba(255,0,0,0.03)"},
+    dnv2:{"--bg":"#050007","--accent":"#ff00de","--blue":"#00fff7","--text":"#ffffff","--surface":"rgba(255,0,255,0.05)","--border":"rgba(255,0,255,0.15)","--card-bg":"rgba(15,0,30,0.7)"},
+    matrix:{"--bg": "#001100","--accent": "#00ff00","--blue": "#33ff33","--text": "#99ff99","--surface": "rgba(0, 255, 0, 0.05)","--border": "rgba(0, 255, 0, 0.15)","--card-bg": "rgba(0, 50, 0, 0.7)"}
+  };
+
+  function applyTheme(theme){
+    Object.entries(theme).forEach(([v,k])=>root.style.setProperty(v,k));
+    try {
+      const frame = document.getElementById("content-frame");
+      if(frame) Object.entries(theme).forEach(([v,k])=>frame.contentWindow.document.documentElement.style.setProperty(v,k));
+    } catch(e){}
+  }
+
+  function loadTheme(){
+    const name = localStorage.getItem("dominum-theme") || "default";
+    if(name === "custom"){
+      const t = JSON.parse(localStorage.getItem("dominum-custom-theme") || "{}");
+      applyTheme(t);
+    } else {
+      applyTheme(themes[name] || themes['default']);
+    }
+  }
+
+  try {
+    const themeVars = window.parent.document.documentElement.style;
+    for(let i=0; i<themeVars.length; i++){
+      const p = themeVars[i];
+      document.documentElement.style.setProperty(p, themeVars.getPropertyValue(p));
+    }
+  } catch(e){}
+
+  loadTheme();
+
+  function openEaglerLauncher() {
+    const targetUrl = "src/assets/pages/ampler-launcher.html";
+    const newTab = window.open("about:blank", "_blank");
+    fetch(targetUrl)
+      .then(response => response.text())
+      .then(html => {
+        newTab.document.open();
+        newTab.document.write(html);
+        newTab.document.close();
+      })
+      .catch(err => {
+        console.error("Failed to load the launcher:", err);
+        newTab.location.href = targetUrl; 
+      });
+  }
+
+  function openGamePorts() {
+    if (window.parent && window.parent.document.getElementById("content-frame")) {
+      window.parent.document.getElementById("content-frame").src = "src/assets/pages/" + path;
+    } else {
+      window.location.href = path;
+    }
+  }
+
+  function openDataGen() {
+    const page = "data-generator.html";
+    if (window.parent && window.parent.document.getElementById("content-frame")) {
+      window.parent.document.getElementById("content-frame").src = "src/assets/pages/" + page;
+    } else {
+      window.location.href = page;
+    }
+  }
+</script>
+</body>
+</html>

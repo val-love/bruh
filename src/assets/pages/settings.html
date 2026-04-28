@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - Dominum</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<style>
+:root {
+  --bg: #0b0a16;
+  --accent: #7a5cff;
+  --blue: #00bfff;
+  --text: #e6e6ff;
+  --surface: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Orbitron', sans-serif;
+  min-height: 100vh;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+#particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+h1 {
+  color: var(--text);
+  font-size: 3em;
+  letter-spacing: 3px;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(122, 92, 255, 0.3);
+  animation: fadeDown 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.setting-box {
+  background: var(--surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 25px 30px;
+  width: 100%;
+  margin-bottom: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.setting-box:nth-child(2) { animation-delay: 0.1s; }
+.setting-box:nth-child(3) { animation-delay: 0.2s; }
+.setting-box:nth-child(4) { animation-delay: 0.3s; }
+.setting-box:nth-child(5) { animation-delay: 0.4s; }
+.setting-box:nth-child(6) { animation-delay: 0.5s; }
+.setting-box:nth-child(7) { animation-delay: 0.6s; }
+@keyframes slideUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+.setting-box:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--text);
+  font-size: 1.1em;
+  letter-spacing: 1px;
+}
+.input-group { margin-top: 15px; }
+.input-group label { font-size: 0.9em; color: var(--text); opacity: 0.8; margin-bottom: 5px; }
+select, input[type="text"], input[type="url"], button {
+  width: 100%;
+  padding: 12px 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.95em;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  appearance: none;
+}
+select {
+  cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--accent) 50%), linear-gradient(135deg, var(--accent) 50%, transparent 50%);
+  background-position: calc(100% - 20px) center, calc(100% - 14px) center;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 40px;
+}
+select option { background-color: var(--bg); color: var(--text); }
+input[type="text"]:focus, input[type="url"]:focus, select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(122, 92, 255, 0.3);
+  background: rgba(0, 0, 0, 0.4);
+}
+button {
+  margin-top: 15px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+button:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(122, 92, 255, 0.4);
+}
+.color-picker-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+.color-item {
+  flex: 1;
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+input[type="color"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  padding: 2px;
+}
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+.file-upload-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 12px 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 5px;
+}
+.file-upload-label:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(122, 92, 255, 0.3);
+}
+#file-name-display { flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0.6; }
+.file-browse-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 8px; font-size: 0.85em; transition: all 0.3s ease; }
+.file-upload-label:hover .file-browse-btn { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.toggle-setting {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  margin-top: 15px;
+}
+.toggle-setting span { font-size: 1.05em; color: var(--text); }
+.toggle-switch { position: relative; display: inline-block; width: 54px; height: 30px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4); border: 1px solid var(--border);
+  transition: .4s; border-radius: 30px;
+}
+.slider:before {
+  position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px;
+  background-color: var(--text); transition: .4s cubic-bezier(0.25, 0.8, 0.25, 1); border-radius: 50%;
+}
+input:checked + .slider { background-color: var(--accent); border-color: var(--accent); box-shadow: 0 0 10px rgba(122, 92, 255, 0.4); }
+input:checked + .slider:before { transform: translateX(24px); background-color: var(--bg); }
+#custom-theme-inputs, #customCloakInputs { animation: slideUp 0.4s ease forwards; }
+</style>
+</head>
+<body>
+<div id="particles-js"></div>
+<div class="content">
+  <h1>Settings</h1>
+
+  <div class="setting-box">
+    <label for="theme">Theme Preset</label>
+    <select id="theme">
+      <option value="default">Default</option>
+      <option value="cyber">Cyber</option>
+      <option value="sunset">Sunset</option>
+      <option value="neon">Neon</option>
+      <option value="darkred">Dark Red</option>
+      <option value="dnv2">DNV2</option>
+      <option value="matrix">Matrix</option>
+      <option value="custom">Custom</option>
+    </select>
+    <div id="custom-theme-inputs" style="display:none; margin-top:20px; padding-top: 20px; border-top: 1px solid var(--border);">
+      <label>Custom Colors</label>
+      <div class="color-picker-group">
+        <div class="color-item"><label>Background</label><input type="color" id="bgColor"></div>
+        <div class="color-item"><label>Accent</label><input type="color" id="accentColor"></div>
+        <div class="color-item"><label>Blue</label><input type="color" id="blueColor"></div>
+        <div class="color-item"><label>Text</label><input type="color" id="textColor"></div>
+      </div>
+      <button id="saveCustom">Save Custom Theme</button>
+    </div>
+  </div>
+  
+  <div class="setting-box">
+    <label>Visual Settings</label>
+    <div class="toggle-setting">
+      <span>Enable Particles</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="particlesToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="setting-box">
+    <label>Tab Cloak</label>
+    <select id="tabCloakPreset">
+      <option value="none">None</option>
+      <option value="google">Google</option>
+      <option value="drive">Google Drive</option>
+      <option value="docs">Google Docs</option>
+      <option value="slides">Google Slides</option>
+      <option value="classroom">Google Classroom</option>
+      <option value="custom">Custom</option>
+    </select>
+    <div id="customCloakInputs" style="display:none; margin-top:20px; padding-top: 20px; border-top: 1px solid var(--border);">
+      <div class="input-group">
+        <label>Custom Tab Title</label>
+        <input type="text" id="customTitle" placeholder="Enter tab title">
+      </div>
+      <div class="input-group">
+        <label>Tab Icon File</label>
+        <label for="customIconUpload" class="file-upload-label">
+          <span id="icon-file-name-display">No file chosen</span>
+          <span class="file-browse-btn">Browse...</span>
+        </label>
+        <input type="file" id="customIconUpload" accept="image/*" style="display: none;">
+      </div>
+      <div class="input-group">
+        <label>Or Image URL</label>
+        <input type="url" id="customIconURL" placeholder="https://example.com/favicon.png">
+      </div>
+    </div>
+    <button id="saveCloak">Save Tab Cloak</button>
+  </div>
+
+  <div class="setting-box">
+    <label>about:blank Mode</label>
+    <button id="openAboutBlank">Open Site in about:blank</button>
+  </div>
+
+  <div class="setting-box">
+    <label>Panic Button</label>
+    <div class="input-group">
+      <label>Panic Key</label>
+      <input type="text" id="panicKey" placeholder="Press a key..." maxlength="1">
+    </div>
+    <div class="input-group">
+      <label>Redirect URL</label>
+      <input type="url" id="panicLink" placeholder="https://example.com">
+    </div>
+    <button id="savePanic">Save Panic Settings</button>
+  </div>
+
+  <div class="setting-box">
+    <label>Data Management</label>
+    <button id="exportData">Export Settings (.dnw)</button>
+    <div class="input-group" style="margin-top: 15px;">
+      <label>Import Settings (.dnw)</label>
+      <label for="importFile" class="file-upload-label">
+        <span id="file-name-display">No file chosen</span>
+        <span class="file-browse-btn">Browse...</span>
+      </label>
+      <input type="file" id="importFile" accept=".dnw" style="display: none;" />
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script>
+function setCookie(name, value, days=365){
+  const d = new Date();
+  d.setTime(d.getTime() + (days*24*60*60*1000));
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/`;
+}
+function getCookie(name){
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+const particlesContainer = document.getElementById('particles-js');
+function initParticles() {
+    if (window.pJSDom && window.pJSDom.length > 0) return;
+    particlesContainer.style.display = 'block';
+    particlesJS("particles-js", {
+      "particles":{"number":{"value":60},"color":{"value":["#7a5cff","#00bfff"]},
+      "shape":{"type":"circle"},"opacity":{"value":0.5},"size":{"value":2},
+      "line_linked":{"enable":true,"distance":130,"color":"#7a5cff","opacity":0.2,"width":1},
+      "move":{"enable":true,"speed":1.2,"direction":"none","out_mode":"out"}},
+      "interactivity":{"events":{"onhover":{"enable":true,"mode":"repulse"}},
+      "modes":{"repulse":{"distance":100}}},"retina_detect":true
+    });
+}
+function destroyParticles() {
+    if (window.pJSDom && window.pJSDom.length > 0) {
+        window.pJSDom[0].pJS.fn.vendors.destroypJS();
+        window.pJSDom = [];
+    }
+    particlesContainer.style.display = 'none';
+}
+const root = document.documentElement;
+const themes = {
+    default: { "--bg": "#0b0a16", "--accent": "#7a5cff", "--blue": "#00bfff", "--text": "#e6e6ff", "--surface": "rgba(255,255,255,0.05)", "--border": "rgba(255,255,255,0.1)" },
+    cyber: { "--bg": "#050c1b", "--accent": "#39ff14", "--blue": "#00ffff", "--text": "#e0ffe0", "--surface": "rgba(0,255,0,0.05)", "--border": "rgba(0,255,0,0.1)" },
+    sunset: { "--bg": "#1a0b0b", "--accent": "#ff6f61", "--blue": "#ffa500", "--text": "#fff0e6", "--surface": "rgba(255,110,100,0.05)", "--border": "rgba(255,110,100,0.1)" },
+    neon: { "--bg": "#0f0020", "--accent": "#ff00ff", "--blue": "#00ffff", "--text": "#ffffff", "--surface": "rgba(255,0,255,0.05)", "--border": "rgba(255,0,255,0.1)" },
+    darkred: { "--bg": "#1b0000", "--accent": "#ff0000", "--blue": "#cc0000", "--text": "#ffe6e6", "--surface": "rgba(255,0,0,0.05)", "--border": "rgba(255,0,0,0.1)" },
+    dnv2: { "--bg": "#050007", "--accent": "#ff00de", "--blue": "#00fff7", "--text": "#ffffff", "--surface": "rgba(255, 0, 255, 0.05)", "--border": "rgba(255, 0, 255, 0.15)" },
+    matrix: { "--bg": "#001100", "--accent": "#00ff00", "--blue": "#33ff33", "--text": "#99ff99", "--surface": "rgba(0, 255, 0, 0.05)", "--border": "rgba(0, 255, 0, 0.15)" }
+};
+function applyTheme(theme) {
+    Object.entries(theme).forEach(([v, k]) => root.style.setProperty(v, k));
+    try {
+        if (window.parent && window.parent !== window) {
+            Object.entries(theme).forEach(([v, k]) => window.parent.document.documentElement.style.setProperty(v, k));
+        }
+    } catch (e) {}
+}
+function saveTheme(themeName, custom) {
+    localStorage.setItem("dominum-theme", themeName);
+    if (custom) localStorage.setItem("dominum-custom-theme", JSON.stringify(custom));
+}
+function loadTheme() {
+    const name = localStorage.getItem("dominum-theme") || "default";
+    if (name === "custom") {
+        const t = JSON.parse(localStorage.getItem("dominum-custom-theme") || "{}");
+        applyTheme(t);
+    } else applyTheme(themes[name]);
+    document.getElementById("theme").value = name;
+    if (name === "custom") document.getElementById("custom-theme-inputs").style.display = "block";
+}
+document.getElementById("theme").onchange = e => {
+    if (e.target.value === "custom") {
+        document.getElementById("custom-theme-inputs").style.display = "block";
+    } else {
+        document.getElementById("custom-theme-inputs").style.display = "none";
+        applyTheme(themes[e.target.value]);
+        saveTheme(e.target.value);
+        if (window.parent && window.parent.loadTheme) window.parent.loadTheme();
+    }
+};
+document.getElementById("saveCustom").onclick = () => {
+    const custom = {
+        "--bg": document.getElementById("bgColor").value,
+        "--accent": document.getElementById("accentColor").value,
+        "--blue": document.getElementById("blueColor").value,
+        "--text": document.getElementById("textColor").value,
+        "--surface": "rgba(255,255,255,0.05)",
+        "--border": "rgba(255,255,255,0.1)"
+    };
+    applyTheme(custom);
+    saveTheme("custom", custom);
+    if (window.parent && window.parent.loadTheme) window.parent.loadTheme();
+};
+const particlesToggle = document.getElementById('particlesToggle');
+particlesToggle.addEventListener('change', () => {
+  if (particlesToggle.checked) {
+    localStorage.setItem('dominum-particles', 'true');
+    initParticles();
+  } else {
+    localStorage.setItem('dominum-particles', 'false');
+    destroyParticles();
+  }
+});
+function loadParticlesSetting() {
+  const particlesEnabled = localStorage.getItem('dominum-particles') !== 'false';
+  particlesToggle.checked = particlesEnabled;
+  if (particlesEnabled) {
+    initParticles();
+  } else {
+    destroyParticles();
+  }
+}
+document.getElementById("openAboutBlank").onclick=()=>{
+  const win=window.open("about:blank","_blank");
+  const iframe=win.document.createElement("iframe");
+  iframe.src="/index.html";
+  iframe.style="border:none;width:100%;height:100vh;";
+  win.document.body.style.margin="0";
+  win.document.body.appendChild(iframe);
+};
+const panicKeyInput = document.getElementById("panicKey");
+const panicLinkInput = document.getElementById("panicLink");
+if (!getCookie("dominum-panic-key")) setCookie("dominum-panic-key","`");
+if (!getCookie("dominum-panic-link")) setCookie("dominum-panic-link","https://google.com/");
+panicKeyInput.value = getCookie("dominum-panic-key");
+panicLinkInput.value = getCookie("dominum-panic-link");
+document.getElementById("savePanic").onclick = () => {
+  setCookie("dominum-panic-key", panicKeyInput.value.toLowerCase());
+  setCookie("dominum-panic-link", panicLinkInput.value);
+  alert("Panic settings saved!");
+};
+document.addEventListener("keydown", e=>{
+  const key = getCookie("dominum-panic-key") || "`";
+  const link = getCookie("dominum-panic-link") || "https://google.com/";
+  if(e.key.toLowerCase() === key.toLowerCase()){
+    window.location.href = link;
+  }
+});
+const cloakPresets = {
+  google: { title: "Google", icon: "https://www.google.com/favicon.ico" },
+  drive: { title: "My Drive - Google Drive", icon: "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png" },
+  docs: { title: "Google Docs", icon: "https://ssl.gstatic.com/docs/doclist/images/mediatype/icon_1_document_x16.png" },
+  slides: { title: "Google Slides", icon: "https://ssl.gstatic.com/docs/doclist/images/mediatype/icon_1_presentation_x16.png" },
+  classroom: { title: "Google Classroom", icon: "https://ssl.gstatic.com/classroom/favicon.png" }
+};
+const presetSelect = document.getElementById("tabCloakPreset");
+const customCloakInputs = document.getElementById("customCloakInputs");
+presetSelect.onchange = () => {
+  customCloakInputs.style.display = presetSelect.value === "custom" ? "block" : "none";
+};
+function applyCloak(title, iconURL){
+  document.title = title;
+  let link = document.querySelector("link[rel='icon']") || document.createElement("link");
+  link.rel = "icon";
+  link.href = iconURL;
+  document.head.appendChild(link);
+}
+document.getElementById("customIconUpload").onchange = function(e) {
+  const file = e.target.files[0];
+  document.getElementById('icon-file-name-display').textContent = file ? file.name : 'No file chosen';
+};
+document.getElementById("saveCloak").onclick = () => {
+  const choice = presetSelect.value;
+  if(choice === "custom"){
+    const title = document.getElementById("customTitle").value || "New Tab";
+    const file = document.getElementById("customIconUpload").files[0];
+    const url = document.getElementById("customIconURL").value;
+    if(file){
+      const reader = new FileReader();
+      reader.onload = () => {
+        setCookie("dominum-cloak", JSON.stringify({title, icon: reader.result}));
+        applyCloak(title, reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else if(url){
+      setCookie("dominum-cloak", JSON.stringify({title, icon: url}));
+      applyCloak(title, url);
+    }
+  } else if(choice !== "none"){
+    const c = cloakPresets[choice];
+    setCookie("dominum-cloak", JSON.stringify(c));
+    applyCloak(c.title, c.icon);
+  } else {
+    setCookie("dominum-cloak", "");
+    applyCloak("Dominum", "");
+  }
+  alert("Tab cloak saved! Reload to see changes fully apply.");
+};
+(function(){
+  const cloakData = getCookie("dominum-cloak");
+  if(cloakData){
+    try {
+      const {title, icon} = JSON.parse(cloakData);
+      applyCloak(title, icon);
+    }catch(e){}
+  }
+})();
+document.getElementById('exportData').onclick = function() {
+    try {
+        if (window.parent && window.parent.exportSettings) {
+            window.parent.exportSettings();
+        } else {
+            alert("Error: Could not find parent export function.");
+        }
+    } catch (e) {
+        alert("Export failed.");
+    }
+};
+document.getElementById('importFile').onchange = function(event) {
+    const fileNameDisplay = document.getElementById('file-name-display');
+    const file = event.target.files[0];
+    if (file) {
+        fileNameDisplay.textContent = file.name;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                if (window.parent && window.parent.importSettings) {
+                    window.parent.importSettings(e.target.result);
+                } else {
+                    alert("Error: Could not find parent import function.");
+                }
+            } catch (error) {
+                alert("Failed to import settings. Invalid file.");
+                event.target.value = null;
+                fileNameDisplay.textContent = 'No file chosen';
+            }
+        };
+        reader.readAsText(file);
+    } else {
+        fileNameDisplay.textContent = 'No file chosen';
+    }
+};
+loadTheme();
+loadParticlesSetting();
+</script>
+</body>
+</html>
