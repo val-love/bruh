@@ -1,0 +1,26 @@
+{
+  "name": "bluebook-testing",
+  "version": "3.1.4",
+  "description": "Cool site, Cool features. What more must I say?",
+  "main": "index.html",
+  "unpkg": "index.html",
+  "files": [
+    "index.html",
+    "404.html",
+    "src/assets/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DominumNetwork/dominum.git"
+  },
+  "keywords": [
+    "Education",
+    "Learning",
+    "K-12",
+    "Mathematics",
+    "Science",
+    "History"
+  ],
+  "author": "DominumNetwork",
+  "license": "MIT"
+}
